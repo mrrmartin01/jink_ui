@@ -76,26 +76,19 @@ export default function Demo() {
           >
             Read Next.js Documentation
           </a>
-          <a
-            href="https://github.com/Tomilola-ng/nextJs15-starter"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full md:w-auto bg-gray-100 text-gray-800 text-center px-6 py-3 rounded-md shadow hover:bg-gray-200"
-          >
-            View GitHub Repository
-          </a>
+          
         </section>
       </main>
 
       <footer className="mt-8 text-gray-500 text-sm">
         Built with 💖 by{" "}
         <a
-          href="https://github.com/Tomilola-ng"
+          href="https://github.com/mrrmartin01"
           target="_blank"
           rel="noopener noreferrer"
           className="text-primary-400 hover:underline"
         >
-          Tomilola-ng
+          mrrmartin01
         </a>
       </footer>
     </div>
