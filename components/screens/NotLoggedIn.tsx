@@ -47,7 +47,7 @@ export default function NotLoggedIn() {
         className="flex flex-col sm:flex-row gap-4"
       >
         <Button asChild size="lg">
-          <Link href="/login">
+          <Link href="/signin">
             <PersonStandingIcon className="mr-2 h-4 w-4" />
             Login
           </Link>

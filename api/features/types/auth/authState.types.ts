@@ -5,5 +5,6 @@ export interface AuthState {
     id: string | null;
     userName: string | null;
     displayName: string | null;
+    profileImage: string | null;
   } | null;
 }

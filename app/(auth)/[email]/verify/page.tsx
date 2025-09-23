@@ -44,14 +44,22 @@ export default function InputOTPForm() {
   const params = useParams<{ email: string }>();
   const searchParams = useSearchParams();
   const email = decodeURIComponent(params.email);
-  const expiresTime = decodeURIComponent(searchParams.get("expires"));
-  const { minutes, seconds, isExpired } = useCountdown(expiresTime);
+  const expiresParam = searchParams.get("expires");
+  if (!expiresParam) {
+    throw new Error("Missing expires param in URL");
+  }
 
+  const expiresTime: string = decodeURIComponent(expiresParam);
+
+  const { minutes, seconds, isExpired } = useCountdown(expiresTime);
   const { handleVerify, isLoading } = useVerify();
   const { handleReVerify, retryLoading } = useReVerify();
-  console.log({ minutes, seconds, isExpired });
+
+  //?debugging
+
+  // console.log({ minutes, seconds, isExpired });
   console.log("expiry time =>", expiresTime);
-  console.log("current time =>", new Date());
+  // console.log("current time =>", new Date());
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -73,24 +81,12 @@ export default function InputOTPForm() {
           <CardDescription>
             Please enter the 4 digits sent to your email to
           </CardDescription>
-          {expiresTime && (
-            <p className="mt-2 font-mono text-xs text-gray-400">
-              {isExpired ? (
-                <span className="text-red-600">Code expired</span>
-              ) : (
-                <>
-                  Expires in {String(minutes).padStart(2, "0")}:
-                  {String(seconds).padStart(2, "0")}
-                </>
-              )}
-            </p>
-          )}
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="w-2/3 space-y-6"
+              className="w-[90%] space-y-6"
             >
               <FormField
                 control={form.control}
@@ -99,7 +95,11 @@ export default function InputOTPForm() {
                   <FormItem>
                     <FormLabel className="sr-only">Verification code</FormLabel>
                     <FormControl>
-                      <InputOTP maxLength={4} {...field} disabled={expiresTime}>
+                      <InputOTP
+                        maxLength={4}
+                        {...field}
+                        disabled={expiresTime ? false : true}
+                      >
                         <InputOTPGroup>
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />
@@ -116,20 +116,33 @@ export default function InputOTPForm() {
                 )}
               />
 
-              {isExpired ? (
-                <Button
-                  variant="link"
-                  className="mt-4"
-                  onClick={() => handleReVerify({ email })}
-                  disabled={isLoading}
-                >
-                  Resend code
-                </Button>
-              ) : (
-                <Button type="submit" disabled={retryLoading}>
-                  Submit
-                </Button>
+              {expiresTime && (
+                <p className="mt-2 font-mono text-xs text-gray-400">
+                  Didn&apos;t get code?{" "}
+                  {isExpired ? (
+                    <Button
+                      variant="link"
+                      className="mt-4"
+                      onClick={() => handleReVerify({ email })}
+                      disabled={retryLoading}
+                    >
+                      Request for new code
+                    </Button>
+                  ) : (
+                    <>
+                      Request new one in
+                      <span className="text-gray-600 font-bold text-sm">
+                        {" "}
+                        {String(minutes).padStart(2, "0")}:
+                        {String(seconds).padStart(2, "0")}
+                      </span>
+                    </>
+                  )}
+                </p>
               )}
+              <Button type="submit" disabled={isLoading}>
+                Submit
+              </Button>
             </form>
           </Form>
         </CardContent>

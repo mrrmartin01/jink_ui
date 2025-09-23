@@ -4,22 +4,23 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useVerifyMutation } from "@/api/services/auth/authApiSlice";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { setAuth } from "@/api/features/auth/authSlice";
+import { useAppDispatch } from "@/api/reduxHook";
 
 export const useVerify = () => {
+  const dispatch = useAppDispatch()
   const [verify, { isLoading }] = useVerifyMutation();
   const { toast } = useToast();
   const router = useRouter();
 
-  const handleVerify = async (data: {
-    email: string;
-    code: string;
-  }) => {
+  const handleVerify = async (data: { email: string; code: string }) => {
     try {
-      await verify(data).unwrap();
+      const res = await verify(data).unwrap();
 
+      dispatch(setAuth(res.user));
+      
       toast({
-        title: "Account created!",
-        description: "Please verify your email to continue.",
+        title: "Account created successfully!",
         variant: "success",
       });
 

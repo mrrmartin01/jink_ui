@@ -1,18 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useLoginMutation } from "@/api/services/auth/authApiSlice";
 import { useToast } from "@/hooks/use-toast";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useSigninMutation } from "@/api/services/auth/authApiSlice";
 
-export const useLogin = () => {
-  const [login, { isLoading }] = useLoginMutation();
+export const useSignin = () => {
+  const [signin, { isLoading }] = useSigninMutation();
   const { toast } = useToast();
   const router = useRouter();
 
-  const handleLogin = async (identifier: string, password: string) => {
+  const handleSignin = async (identifier: string, password: string) => {
     try {
-      await login({ identifier, password }).unwrap();
+      await signin({ identifier, password }).unwrap();
 
       toast({
         title: "Welcome back!",
@@ -47,5 +47,5 @@ export const useLogin = () => {
     }
   };
 
-  return { handleLogin, isLoading };
+  return { handleSignin, isLoading };
 };

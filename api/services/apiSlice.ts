@@ -9,7 +9,11 @@ const baseQuery = fetchBaseQuery({
   credentials: "include",
 });
 
-const baseQueryWithReauth: typeof baseQuery = async (args, api, extraOptions) => {
+const baseQueryWithReauth: typeof baseQuery = async (
+  args,
+  api,
+  extraOptions,
+) => {
   await mutex.waitForUnlock();
   let result = await baseQuery(args, api, extraOptions);
 
@@ -20,23 +24,26 @@ const baseQueryWithReauth: typeof baseQuery = async (args, api, extraOptions) =>
         const refreshResult = await baseQuery(
           { url: "/auth/refresh/", method: "POST" },
           api,
-          extraOptions
+          extraOptions,
         );
 
-        if (refreshResult.data) {
-          api.dispatch(setAuth(null)); // Re-verify user after refresh
-          result = await baseQuery(args, api, extraOptions);
-        } else {
-          api.dispatch(logout());
+      if (refreshResult.data) {
+        const me = await baseQuery({ url: "/users/me" }, api, extraOptions);
+        if (me?.data) {
+          api.dispatch(setAuth(me.data));
         }
-      } finally {
-        release();
+        result = await baseQuery(args, api, extraOptions);
+      } else {
+        api.dispatch(logout());
       }
-    } else {
-      await mutex.waitForUnlock();
-      result = await baseQuery(args, api, extraOptions);
+    } finally {
+      release();
     }
+  } else {
+    await mutex.waitForUnlock();
+    result = await baseQuery(args, api, extraOptions);
   }
+}
 
   return result;
 };

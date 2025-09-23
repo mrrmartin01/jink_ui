@@ -23,32 +23,30 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useSignin } from "@/hooks/auth/useSignin";
 
-import { loginFormSchema } from "@/lib/validation-schemas";
-
-const formSchema = loginFormSchema;
+const signinSchema = z.object({
+  identifier: z.string("Invalid username or password"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 export default function LoginPreview() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { handleSignin, isLoading } = useSignin();
+  const form = useForm<z.infer<typeof signinSchema>>({
+    resolver: zodResolver(signinSchema),
     defaultValues: {
-      email: "",
+      identifier: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      // Assuming an async login function
-      console.log(values);
-    } catch (error) {
-      console.error("Form submission error", error);
-    }
+  async function onSubmit(values: z.infer<typeof signinSchema>) {
+    await handleSignin(values.identifier, values.password);
   }
 
   return (
-    <div className="flex h-full min-h-[50vh] w-full flex-col items-center justify-center px-4">
-      <Card className="mx-auto max-w-sm">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center px-4">
+      <Card className="mx-autow-full max-w-[27rem]">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
@@ -61,17 +59,17 @@ export default function LoginPreview() {
               <div className="grid gap-4">
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="identifier"
                   render={({ field }) => (
-                    <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormItem className="grid">
+                      <FormLabel htmlFor="email">Email or Username</FormLabel>
                       <FormControl>
                         <Input
-                          id="email"
+                          id="identifier"
                           placeholder="johndoe@mail.com"
-                          type="email"
+                          type="text"
                           autoComplete="email"
-                          className="text-red-500"
+                          className=""
                           {...field}
                         />
                       </FormControl>
@@ -83,9 +81,17 @@ export default function LoginPreview() {
                   control={form.control}
                   name="password"
                   render={({ field }) => (
-                    <FormItem className="grid gap-2">
-                      <div className="flex items-center justify-between">
-                        <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormItem className="grid">
+                      <FormLabel htmlFor="password">Password</FormLabel>
+                      <div className="flex flex-col justify-between">
+                        <FormControl>
+                          <PasswordInput
+                            id="password"
+                            placeholder="******"
+                            autoComplete="current-password"
+                            {...field}
+                          />
+                        </FormControl>
                         <Link
                           href="#"
                           className="ml-auto inline-block text-sm underline"
@@ -93,30 +99,20 @@ export default function LoginPreview() {
                           Forgot your password?
                         </Link>
                       </div>
-                      <FormControl>
-                        <PasswordInput
-                          id="password"
-                          placeholder="******"
-                          autoComplete="current-password"
-                          {...field}
-                        />
-                      </FormControl>
+
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
-                  Login
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Login with Google
+                <Button type="submit" disabled={isLoading} className="w-full">
+                  Signin
                 </Button>
               </div>
             </form>
           </Form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="#" className="underline">
+            <Link href="/signup" className="underline">
               Sign up
             </Link>
           </div>

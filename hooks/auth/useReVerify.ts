@@ -12,13 +12,13 @@ export const useReVerify = () => {
   const handleReVerify = async (data: { email: string }) => {
     try {
      const res =  await reVerify(data).unwrap();
-     console.log("re-verify res =>",res)
       toast({
         title: "Verification email resent",
         description: "Check your inbox for a new code.",
       });
       router.replace(`/${encodeURIComponent(data.email)}/verify?expires=${encodeURIComponent(res.codeTimer)}`);
     } catch (err: unknown) {
+      console.log('error =>>',err);
       let message = "Please try again later.";
 
       if (typeof err === "object" && err !== null) {
