@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
 import { logout, setAuth } from "../features/auth/authSlice";
+import { AuthState } from "../features/types/auth";
 
 const mutex = new Mutex();
 
@@ -22,28 +23,30 @@ const baseQueryWithReauth: typeof baseQuery = async (
       const release = await mutex.acquire();
       try {
         const refreshResult = await baseQuery(
-          { url: "/auth/refresh/", method: "POST" },
+          {
+            url: "/auth/refresh/",
+            method: "POST",
+            credentials: "include",
+          },
           api,
           extraOptions,
         );
 
-      if (refreshResult.data) {
-        const me = await baseQuery({ url: "/users/me" }, api, extraOptions);
-        if (me?.data) {
-          api.dispatch(setAuth(me.data));
+        if (refreshResult.data) {
+          const data = refreshResult.data as AuthState["user"];
+          api.dispatch(setAuth(data));
+          result = await baseQuery(args, api, extraOptions);
+        } else {
+          api.dispatch(logout());
         }
-        result = await baseQuery(args, api, extraOptions);
-      } else {
-        api.dispatch(logout());
+      } finally {
+        release();
       }
-    } finally {
-      release();
+    } else {
+      await mutex.waitForUnlock();
+      result = await baseQuery(args, api, extraOptions);
     }
-  } else {
-    await mutex.waitForUnlock();
-    result = await baseQuery(args, api, extraOptions);
   }
-}
 
   return result;
 };

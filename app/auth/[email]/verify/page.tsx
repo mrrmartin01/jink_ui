@@ -55,12 +55,6 @@ export default function InputOTPForm() {
   const { handleVerify, isLoading } = useVerify();
   const { handleReVerify, retryLoading } = useReVerify();
 
-  //?debugging
-
-  // console.log({ minutes, seconds, isExpired });
-  console.log("expiry time =>", expiresTime);
-  // console.log("current time =>", new Date());
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {

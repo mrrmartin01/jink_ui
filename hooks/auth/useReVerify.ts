@@ -16,9 +16,8 @@ export const useReVerify = () => {
         title: "Verification email resent",
         description: "Check your inbox for a new code.",
       });
-      router.replace(`/${encodeURIComponent(data.email)}/verify?expires=${encodeURIComponent(res.codeTimer)}`);
+      router.replace(`/auth/${encodeURIComponent(data.email)}/verify?expires=${encodeURIComponent(res.codeTimer)}`);
     } catch (err: unknown) {
-      console.log('error =>>',err);
       let message = "Please try again later.";
 
       if (typeof err === "object" && err !== null) {

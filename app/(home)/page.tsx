@@ -1,5 +1,7 @@
-import Demo from "./demo";
+import React from "react";
 
-export default function Home() {
-  return <Demo />;
-}
+const Homepage = () => {
+  return <div>Homepage</div>;
+};
+
+export default Homepage;

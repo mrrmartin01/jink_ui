@@ -1,11 +1,13 @@
 import React from "react";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Inter as BodyFont, Sora as HeadingFont } from "next/font/google";
 
 import "../styles/globals.css";
 import { _siteConfig } from "@/config/site";
 import CustomProvider from "@/api/reduxProvider";
+import { AuthInitializer } from "./providers";
+import { ThemeProvider } from "@/context/theme/theme-provider";
 
 const inter = BodyFont({
   variable: "--font-inter",
@@ -32,11 +34,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${heading.variable} antialiased`}
     >
       <body className={`${inter.className} antialiased`}>
-        <CustomProvider>{children}</CustomProvider>
-        <Toaster/>
+        <CustomProvider>
+          <AuthInitializer>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </AuthInitializer>
+        </CustomProvider>
+        <Toaster />
       </body>
     </html>
   );

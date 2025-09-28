@@ -1,33 +1,25 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useSignupMutation } from "@/api/services/auth/authApiSlice";
 import { useToast } from "@/hooks/use-toast";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useResetPasswordMutation } from "@/api/services/auth/authApiSlice";
+import { useRouter } from "next/navigation";
 
-export const useSignup = () => {
-  const [signup, { isLoading }] = useSignupMutation();
+export const useResetPassword = () => {
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const { toast } = useToast();
   const router = useRouter();
 
-  const handleSignup = async (data: {
-    email: string;
-    password: string;
-    userName: string;
-    displayName: string;
-    firstName?: string;
-    lastName?: string;
-  }) => {
+  const handleResetPassword = async (tokenParam: string, password: string) => {
     try {
-      const res =  await signup(data).unwrap();
+      const res = await resetPassword({ tokenParam, password }).unwrap();
 
       toast({
-        title: "Account created!",
-        description: "Please verify your email to continue.",
+        title: "Success",
+        description: `${res.message}`,
         variant: "success",
       });
-
-    router.push(`/auth/${encodeURIComponent(data.email)}/verify?expires=${encodeURIComponent(res.codeTimer)}`);
+        router.push("/auth/signin");
     } catch (err: unknown) {
       let message = "Please try again later.";
 
@@ -45,14 +37,14 @@ export const useSignup = () => {
           message = String(error.data.message);
         }
       }
-      console.log(err);
+
       toast({
-        title: "Signup failed",
+        title: "Reset password failed",
         description: message,
         variant: "error",
       });
     }
   };
 
-  return { handleSignup, isLoading };
+  return { handleResetPassword, isLoading };
 };

@@ -10,10 +10,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     verify: builder.mutation({
-      query: ({ email,code }) => ({
+      query: ({ email, code }) => ({
         url: "/auth/verify",
         method: "POST",
-        body: { email,code },
+        body: { email, code },
       }),
     }),
     reVerify: builder.mutation({
@@ -23,18 +23,27 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: { email },
       }),
     }),
-    refresh: builder.mutation({
-      query: ({ refreshToken }) => ({
+    refresh: builder.query({
+      query: () => ({
         url: "/auth/refresh",
         method: "POST",
-        body: { refreshToken },
+        credentials: "include",
       }),
+      keepUnusedDataFor: 0, // expire immediately after unsubscribed
     }),
+
     retrieveUser: builder.query({
       query: () => "/users/me",
     }),
     signup: builder.mutation({
-      query: ({ userName, displayName, email, password, firstName, lastName }) => ({
+      query: ({
+        userName,
+        displayName,
+        email,
+        password,
+        firstName,
+        lastName,
+      }) => ({
         url: "/auth/signup",
         method: "POST",
         body: { userName, displayName, email, password, firstName, lastName },
@@ -46,6 +55,22 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+
+    //crud user
+    forgotPassword: builder.mutation({
+      query: ({ email }) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body: { email },
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: ({ tokenParam, password }) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: { token: tokenParam, newPassword: password },
+      }),
+    }),
   }),
 });
 
@@ -53,8 +78,11 @@ export const {
   useSigninMutation,
   useVerifyMutation,
   useReVerifyMutation,
-  useRefreshMutation,
+  useRefreshQuery,
   useRetrieveUserQuery,
   useSignupMutation,
   useSignoutMutation,
+
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authApiSlice;
