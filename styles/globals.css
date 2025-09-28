@@ -10,9 +10,6 @@ body {
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   :root {
     --sidebar-background: 220 20% 92%;
     --sidebar-foreground: 220 25% 20%;

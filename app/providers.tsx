@@ -23,13 +23,13 @@ export function AuthInitializer({ children }: { children: React.ReactNode }) {
     }
   }, [isSuccess, isError, data, dispatch]);
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex h-screen items-center justify-center bg-gray-500/20">
+  //       Loading...
+  //     </div>
+  //   );
+  // }
 
   return <>{children}</>;
 }

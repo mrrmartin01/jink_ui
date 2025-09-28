@@ -20,7 +20,7 @@ export const useSignin = () => {
         variant: "success",
       });
 
-      router.push("/home");
+      router.push("/");
     } catch (err: unknown) {
       let message = "Please try again later.";
 
