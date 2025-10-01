@@ -101,7 +101,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <div className="absolute inset-0 w-[70%] rounded-full bg-green-600 dark:bg-sky-900" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Jink</span>
+                  <span className="truncate font-semibold font-mono text-md">Thing</span>
                   {isLoading ? (
                     <div className="dar h-5 w-1/2 animate-pulse rounded-xl bg-sidebar-accent duration-1000" />
                   ) : (

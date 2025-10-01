@@ -1,3 +1,4 @@
+import { User } from "@/types/user";
 import { apiSlice } from "../apiSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
@@ -32,9 +33,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 0, // expire immediately after unsubscribed
     }),
 
-    retrieveUser: builder.query({
-      query: () => "/users/me",
+    getUser: builder.query<User, void>({
+      query: () => ({
+        url: "/users/me",
+        method: "GET",
+        credentials: "include",
+      }),
     }),
+
     signup: builder.mutation({
       query: ({
         userName,
@@ -79,7 +85,7 @@ export const {
   useVerifyMutation,
   useReVerifyMutation,
   useRefreshQuery,
-  useRetrieveUserQuery,
+  useGetUserQuery,
   useSignupMutation,
   useSignoutMutation,
 

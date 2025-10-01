@@ -1,7 +1,7 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
-import { Inter as BodyFont, Sora as HeadingFont } from "next/font/google";
+import { Inter as BodyFont, Sora as HeadingFont, IBM_Plex_Mono as MonoFont } from "next/font/google";
 
 import "../styles/globals.css";
 import { _siteConfig } from "@/config/site";
@@ -21,6 +21,12 @@ const heading = HeadingFont({
   weight: ["600", "700", "800"],
 });
 
+const monoFont = MonoFont({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+});
+
 export const metadata: Metadata = {
   title: _siteConfig.name,
   description: _siteConfig.desc,
@@ -35,7 +41,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${heading.variable} antialiased`}
+      className={`${inter.variable} ${heading.variable} ${monoFont.variable} antialiased`}
     >
       <body className={`${inter.className} antialiased`}>
         <CustomProvider>

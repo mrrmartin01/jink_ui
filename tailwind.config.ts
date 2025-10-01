@@ -85,7 +85,8 @@ export default {
   			heading: [
   				'var(--font-heading)',
   				'sans-serif'
-  			]
+  			],
+			mono: ["var(--font-mono)", "monospace"],
   		},
   		borderRadius: {
   			lg: '16px',
