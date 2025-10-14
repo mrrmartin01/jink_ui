@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -11,14 +10,16 @@ import {
   Verified,
 } from "lucide-react";
 import { PostCard } from "./postCard";
-import { useGetUser } from "@/hooks/users/useGetUser";
+import { useGetUser } from "@/hooks/users";
+import { EditProfile } from "./editProfile";
+import ViewPictures from "./viewPictures";
 
 export function ProfilePagePreview({ me = false }: { me: boolean }) {
   const { user, isLoading, isError } = useGetUser();
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950 text-gray-100">
+      <div className="flex min-h-screen items-center justify-center">
         Loading...
       </div>
     );
@@ -26,7 +27,7 @@ export function ProfilePagePreview({ me = false }: { me: boolean }) {
 
   if (isError || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950 text-gray-100">
+      <div className="flex min-h-screen items-center justify-center">
         Error loading user data
       </div>
     );
@@ -35,10 +36,10 @@ export function ProfilePagePreview({ me = false }: { me: boolean }) {
   const website = user.website && user.website !== "{}" ? user.website : null;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b border-gray-800 bg-gray-900/80 backdrop-blur-md transition-all duration-300">
-        <div className="mx-auto max-w-3xl px-4 py-3 sm:px-6">
+      <div className="sticky top-0 z-10 border-b bg-gray-200/70 backdrop-blur-md transition-all duration-300 dark:border-gray-800 dark:bg-gray-900/80">
+        <div className="mx-auto max-w-4xl px-4 py-3 sm:px-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-lg font-extrabold tracking-tight sm:text-xl">
@@ -57,35 +58,20 @@ export function ProfilePagePreview({ me = false }: { me: boolean }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-4xl">
+
         {/* Cover Image */}
-        <div
-          className={`h-48 sm:h-64 ${user.coverImageUrl ? "bg-cover bg-center" : "bg-gradient-to-r from-blue-600 to-purple-600"} relative`}
-          style={
-            user.coverImageUrl
-              ? { backgroundImage: `url(${user.coverImageUrl})` }
-              : {}
-          }
-        >
-          <div className="absolute -bottom-16 left-4 sm:left-6">
-            <Avatar className="h-24 w-24 transform rounded-full border-4 border-gray-950 shadow-2xl transition-transform hover:scale-105 sm:h-32 sm:w-32">
-              <AvatarImage
-                src={user.profileImageUrl || "/placeholder.svg"}
-                alt={user.displayName}
-              />
-              <AvatarFallback className="bg-gray-800 text-2xl font-bold text-gray-100">
-                {user.displayName?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
+        <ViewPictures user={user} me={me} />
 
         {/* Profile Header */}
-
-        <div className="px-4 pb-8 pt-16 sm:px-6">
+        <div className="px-4 pb-8 pt-12 sm:px-6">
           <div className="flex flex-col gap-4">
             {/* Actions */}
-            {me ? null : (
+            {me ? (
+              <div className="flex justify-end">
+                <EditProfile data={user} />
+              </div>
+            ) : (
               <div className="flex justify-end gap-2">
                 <Button
                   variant="outline"
@@ -114,7 +100,7 @@ export function ProfilePagePreview({ me = false }: { me: boolean }) {
               <p className="text-sm text-gray-500">@{user.userName}</p>
 
               {user.bio && (
-                <p className="max-w-2xl text-pretty leading-relaxed text-gray-300">
+                <p className="max-w-2xl text-pretty leading-relaxed text-gray-700 dark:text-gray-300">
                   {user.bio}
                 </p>
               )}
@@ -146,13 +132,13 @@ export function ProfilePagePreview({ me = false }: { me: boolean }) {
 
               <div className="flex items-center gap-6">
                 <div className="flex cursor-pointer items-center gap-1 transition-colors hover:text-blue-500">
-                  <span className="font-semibold text-gray-100">
+                  <span className="font-semibold text-gray-700 dark:text-gray-100">
                     {user?._count.following.toLocaleString()}
                   </span>
                   <span className="text-gray-500">Following</span>
                 </div>
                 <div className="flex cursor-pointer items-center gap-1 transition-colors hover:text-blue-500">
-                  <span className="font-semibold text-gray-100">
+                  <span className="font-semibold text-gray-700 dark:text-gray-100">
                     {user._count.followers.toLocaleString()}
                   </span>
                   <span className="text-gray-500">Followers</span>
@@ -162,19 +148,19 @@ export function ProfilePagePreview({ me = false }: { me: boolean }) {
           </div>
         </div>
 
-        <Separator className="bg-gray-800 opacity-50" />
+        <Separator className="bg-gray-800 opacity-50 dark:bg-gray-500" />
 
         {/* Navigation Tabs */}
-        <div className="sticky top-14 z-10 bg-gray-950 px-4 py-4 sm:px-6">
+        <div className="sticky top-14 z-10 bg-gray-300 px-4 py-4 dark:bg-gray-900 sm:px-6">
           <div className="scrollbar-hide flex gap-6 overflow-x-auto sm:gap-8">
             {["Posts", "Replies", "Media", "Likes"].map((tab) => (
               <Button
                 key={tab}
                 variant="ghost"
-                className={`rounded-none px-0 pb-3 text-sm font-semibold transition-colors ${
+                className={`rounded-none px-2 pb-3 text-sm font-semibold transition-colors ${
                   tab === "Posts"
                     ? "border-b-2 border-blue-500 text-blue-500"
-                    : "text-gray-500 hover:text-gray-100"
+                    : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-100"
                 }`}
               >
                 {tab}
@@ -183,22 +169,26 @@ export function ProfilePagePreview({ me = false }: { me: boolean }) {
           </div>
         </div>
 
-        <Separator className="bg-gray-800 opacity-50" />
+        <Separator className="bg-gray-800 opacity-50 dark:bg-gray-500" />
 
         {/* Posts */}
         <div className="space-y-4 px-4 py-6 sm:px-6">
-          {user?.pinnedPostId &&
-          user.posts.find((post) => post.id === user.pinnedPostId) ? (
-            <PostCard
-              post={user.posts.find((post) => post.id === user.pinnedPostId)}
-              isPinned={true}
-              mockUser={user}
-            />
-          ) : null}
-          {user?.posts.length > 0 ? (
-            user?.posts.map((post) => (
-              <PostCard key={post.id} post={post} mockUser={user} />
-            ))
+          {/* Pinned post */}
+          {user.pinnedPostId &&
+            (() => {
+              const pinned = user.posts.find((p) => p.id === user.pinnedPostId);
+              return pinned ? (
+                <PostCard post={pinned} isPinned mockUser={user} />
+              ) : null;
+            })()}
+
+          {/* All other posts */}
+          {user.posts.length > 0 ? (
+            user.posts
+              .filter((p) => p.id !== user.pinnedPostId)
+              .map((post) => (
+                <PostCard key={post.id} post={post} mockUser={user} />
+              ))
           ) : (
             <div className="py-8 text-center text-gray-500">
               No posts yet. Say Some - Thing!

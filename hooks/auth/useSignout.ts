@@ -3,7 +3,7 @@ import { logout } from "@/api/features/auth/authSlice";
 import { useAppDispatch } from "@/api/reduxHook";
 import { useSignoutMutation } from "@/api/services/auth/authApiSlice";
 
-export const Signout = () => {
+const useSignout = () => {
   const dispatch = useAppDispatch();
   const [signout, {isLoading}] = useSignoutMutation();
 
@@ -19,3 +19,5 @@ export const Signout = () => {
 
   return {handleSignout, isLoading}
 }
+
+export default useSignout;

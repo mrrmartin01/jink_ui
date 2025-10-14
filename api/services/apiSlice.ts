@@ -38,6 +38,7 @@ const baseQueryWithReauth: typeof baseQuery = async (
           result = await baseQuery(args, api, extraOptions);
         } else {
           api.dispatch(logout());
+          window.location.href = "/auth/signin";
         }
       } finally {
         release();

@@ -25,9 +25,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useAppSelector } from "@/api/reduxHook";
 import ThemeToggle from "@/context/theme/theme-toggle";
 import { IconMathTg } from "@tabler/icons-react";
+import { useGetUser } from "@/hooks/users";
 
 const data = {
   navMain: [
@@ -83,7 +83,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { isLoading, user } = useAppSelector((state) => state.auth);
+  const { user, isLoading } = useGetUser();
 
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
@@ -96,17 +96,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="hover:bg-transparent"
             >
               <a href="#">
-                <div className="relative flex aspect-square size-8 items-center justify-center rounded-lg bg-sky-900 dark:bg-green-600 text-sidebar-primary-foreground">
-                  <IconMathTg className="size-8 z-50" />
+                <div className="relative flex aspect-square size-8 items-center justify-center rounded-lg bg-sky-900 text-sidebar-primary-foreground dark:bg-green-600">
+                  <IconMathTg className="z-50 size-8" />
                   <div className="absolute inset-0 w-[70%] rounded-full bg-green-600 dark:bg-sky-900" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold font-mono text-md">Thing</span>
+                  <span className="text-md truncate font-mono font-semibold">
+                    Thing
+                  </span>
                   {isLoading ? (
-                    <div className="dar h-5 w-1/2 animate-pulse rounded-xl bg-sidebar-accent duration-1000" />
+                    <div className="h-5 w-1/2 animate-pulse rounded-xl bg-sidebar-accent duration-1000" />
                   ) : (
                     <span className="truncate font-thin text-gray-500">
-                      @{user?.userName}
+                      {isLoading ? (
+                        <span className="inline-block h-5 w-1/2 animate-pulse rounded-xl bg-sidebar-accent duration-1000" />
+                      ) : (
+                        <>@{user?.userName}</>
+                      )}
                     </span>
                   )}
                 </div>
@@ -121,7 +127,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <ThemeToggle />
-        <NavUser user={user} loading={isLoading} />
+        <NavUser user={user ?? null} loading={isLoading} />
       </SidebarFooter>
     </Sidebar>
   );

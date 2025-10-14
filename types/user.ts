@@ -18,6 +18,7 @@ export type User = {
   pinnedPostId: string[];
   likes: string[];
   bookmarks?: string[];
+  profession?: string;
   _count: {
     posts: number;
     followers: number;

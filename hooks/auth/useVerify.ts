@@ -7,7 +7,7 @@ import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { setAuth } from "@/api/features/auth/authSlice";
 import { useAppDispatch } from "@/api/reduxHook";
 
-export const useVerify = () => {
+const useVerify = () => {
   const dispatch = useAppDispatch()
   const [verify, { isLoading }] = useVerifyMutation();
   const { toast } = useToast();
@@ -53,3 +53,5 @@ export const useVerify = () => {
 
   return { handleVerify, isLoading };
 };
+
+export default useVerify;

@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useSigninMutation } from "@/api/services/auth/authApiSlice";
 
-export const useSignin = () => {
+const useSignin = () => {
   const [signin, { isLoading }] = useSigninMutation();
   const { toast } = useToast();
   const router = useRouter();
@@ -49,3 +49,5 @@ export const useSignin = () => {
 
   return { handleSignin, isLoading };
 };
+
+export default useSignin;

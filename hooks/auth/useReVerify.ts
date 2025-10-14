@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useRouter } from "next/navigation";
 
-export const useReVerify = () => {
+const useReVerify = () => {
   const [reVerify, { isLoading }] = useReVerifyMutation();
     const router = useRouter();
   const { toast } = useToast();
@@ -45,3 +45,5 @@ export const useReVerify = () => {
 
   return { handleReVerify, retryLoading: isLoading };
 };
+
+export default useReVerify;

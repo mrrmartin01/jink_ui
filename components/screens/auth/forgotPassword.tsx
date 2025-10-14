@@ -22,7 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
+import { useForgotPassword } from "@/hooks/auth";
 
 const forgotPasswordSchema = z.object({
   email: z.email("Invalid email"),

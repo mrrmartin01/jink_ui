@@ -20,7 +20,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useSearchParams, useParams } from "next/navigation";
-import { useVerify } from "@/hooks/auth/useVerify";
+import { useVerify } from "@/hooks/auth";
 import {
   Card,
   CardContent,
@@ -29,7 +29,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useCountdown } from "@/hooks/useCounter";
-import { useReVerify } from "@/hooks/auth/useReVerify";
+import { useReVerify } from "@/hooks/auth";
 
 const FormSchema = z.object({
   email: z.email().min(4, {
@@ -111,22 +111,21 @@ export default function InputOTPForm() {
               />
 
               {expiresTime && (
-                <p className="mt-2 font-mono text-xs text-gray-400">
+                <p className="mt-2 font-mono text-xs text-gray-400 dark:text-gray-300">
                   Didn&apos;t get code?{" "}
                   {isExpired ? (
                     <Button
                       variant="link"
-                      className="mt-4"
+                      className="ml-1 inline-flex items-center px-0 text-xs"
                       onClick={() => handleReVerify({ email })}
                       disabled={retryLoading}
                     >
-                      Request for new code
+                      Request new code
                     </Button>
                   ) : (
                     <>
-                      Request new one in
-                      <span className="text-gray-600 font-bold text-sm">
-                        {" "}
+                      Request new one in{" "}
+                      <span className="text-sm font-bold text-gray-400 dark:text-gray-600">
                         {String(minutes).padStart(2, "0")}:
                         {String(seconds).padStart(2, "0")}
                       </span>
@@ -134,6 +133,7 @@ export default function InputOTPForm() {
                   )}
                 </p>
               )}
+
               <Button type="submit" disabled={isLoading}>
                 Submit
               </Button>

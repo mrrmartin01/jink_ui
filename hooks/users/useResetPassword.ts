@@ -5,7 +5,7 @@ import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useResetPasswordMutation } from "@/api/services/auth/authApiSlice";
 import { useRouter } from "next/navigation";
 
-export const useResetPassword = () => {
+const useResetPassword = () => {
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const { toast } = useToast();
   const router = useRouter();
@@ -48,3 +48,5 @@ export const useResetPassword = () => {
 
   return { handleResetPassword, isLoading };
 };
+
+export default useResetPassword;

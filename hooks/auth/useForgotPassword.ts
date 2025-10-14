@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useForgotPasswordMutation } from "@/api/services/auth/authApiSlice";
 
-export const useForgotPassword = () => {
+const useForgotPassword = () => {
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
   const { toast } = useToast();
 
@@ -45,3 +45,5 @@ export const useForgotPassword = () => {
 
   return { handleForgotPassword, isLoading };
 };
+
+export default useForgotPassword;

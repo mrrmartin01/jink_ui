@@ -5,7 +5,7 @@ import { useSignupMutation } from "@/api/services/auth/authApiSlice";
 import { useToast } from "@/hooks/use-toast";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
-export const useSignup = () => {
+const useSignup = () => {
   const [signup, { isLoading }] = useSignupMutation();
   const { toast } = useToast();
   const router = useRouter();
@@ -45,7 +45,6 @@ export const useSignup = () => {
           message = String(error.data.message);
         }
       }
-      console.log(err);
       toast({
         title: "Signup failed",
         description: message,
@@ -56,3 +55,5 @@ export const useSignup = () => {
 
   return { handleSignup, isLoading };
 };
+
+export default useSignup;

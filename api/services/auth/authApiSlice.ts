@@ -1,5 +1,7 @@
 import { User } from "@/types/user";
 import { apiSlice } from "../apiSlice";
+import { setAuth } from "@/api/features/auth/authSlice";
+import { RootState } from "@/api/store";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -30,7 +32,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         credentials: "include",
       }),
-      keepUnusedDataFor: 0, // expire immediately after unsubscribed
     }),
 
     getUser: builder.query<User, void>({
@@ -77,6 +78,56 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: { token: tokenParam, newPassword: password },
       }),
     }),
+    editUser: builder.mutation({
+      query: (data) => ({
+        url: "/users",
+        method: "PATCH",
+        body: data,
+      }),
+      async onQueryStarted(data, { dispatch, queryFulfilled, getState }) {
+        const currentUser = (getState() as RootState).auth.user;
+
+        const patchResult = dispatch(
+          authApiSlice.util.updateQueryData("getUser", undefined, (draft) => {
+            Object.assign(draft, data);
+          }),
+        );
+        dispatch(setAuth({ ...currentUser, ...data }));
+
+        try {
+          const { data: response } = await queryFulfilled;
+          dispatch(setAuth(response.user ?? response));
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+    postProfilePicture: builder.mutation({
+      query: (formData) => ({
+        url: "/users/profile-picture",
+        method: "POST",
+        body: formData,
+      }),
+    }),
+    deleteProfilePicture: builder.mutation({
+      query: () => ({
+        url: "/users/profile-picture",
+        method: "DELETE",
+      }),
+    }),
+    postCoverPicture: builder.mutation({
+      query: (formData) => ({
+        url: "/users/cover-picture",
+        method: "POST",
+        body: formData,
+      }),
+    }),
+    deleteCoverPicture: builder.mutation({
+      query: () => ({
+        url: "/users/cover-picture",
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -91,4 +142,10 @@ export const {
 
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useEditUserMutation,
+
+  usePostProfilePictureMutation,
+  useDeleteProfilePictureMutation,
+  usePostCoverPictureMutation,
+  useDeleteCoverPictureMutation,
 } = authApiSlice;

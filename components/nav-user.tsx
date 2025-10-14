@@ -26,13 +26,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { AuthState } from "@/api/features/types/auth";
+import { User as userProp } from "@/types/user";
 
 export function NavUser({
   user,
   loading,
 }: {
-  user: AuthState["user"];
+  user: userProp | null;
   loading: boolean;
 }) {
   const { isMobile } = useSidebar();
@@ -52,11 +52,11 @@ export function NavUser({
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
-                      src={user?.profileImage || ""}
+                      src={user?.profileImageUrl || ""}
                       alt={user?.displayName || ""}
                     />
-                    <AvatarFallback className="rounded-lg">
-                      <User className="bg-gradient-to-t from-blue-500 to-sky-50 text-black" />
+                    <AvatarFallback className="bg-gradient-to-b from-blue-500 to-sky-50">
+                      <User className=" text-slate-600" />
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -78,10 +78,10 @@ export function NavUser({
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage
-                        src={user?.profileImage || ""}
+                        src={user?.profileImageUrl || ""}
                         alt={user?.displayName || ""}
                       />
-                      <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                      <AvatarFallback className="">{user?.displayName?.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold">

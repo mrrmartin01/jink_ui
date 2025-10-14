@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useSignup } from "@/hooks/auth/useSignup";
+import { useSignup } from "@/hooks/auth";
 
 const signupFormSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -79,9 +79,9 @@ export default function SignupPreview() {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center">
-      <Card className="mx-auto w-full max-w-[27rem]">
+      <Card className="mx-auto w-full max-w-[27rem] rounded-none md:rounded-3xl">
         <CardHeader>
-          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardTitle className="text-2xl">Create Account</CardTitle>
           <CardDescription>
             Step {step} of 3: Create an account to get started.
           </CardDescription>
@@ -192,13 +192,14 @@ export default function SignupPreview() {
                   </>
                 )}
 
-                <div className="flex justify-between">
+                <div className="flex gap-4">
                   {step > 1 && (
                     <Button
                       type="button"
                       variant="outline"
                       onClick={prevStep}
                       disabled={isLoading}
+                      className="flex-1 bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-700"
                     >
                       Back
                     </Button>
@@ -207,7 +208,7 @@ export default function SignupPreview() {
                     type="button"
                     onClick={nextStep}
                     disabled={isLoading}
-                    className="ml-auto"
+                    className="flex-1 dark:hover:bg-gray-300"
                   >
                     {step === 3 ? "Sign Up" : "Next"}
                   </Button>

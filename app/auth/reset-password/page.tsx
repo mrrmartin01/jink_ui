@@ -22,7 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useResetPassword } from "@/hooks/users/useResetPassword";
+import { useResetPassword } from "@/hooks/users";
 
 const FormSchema = z.object({
   password: z.string().min(4, {

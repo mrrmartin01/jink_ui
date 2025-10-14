@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useSignin } from "@/hooks/auth/useSignin";
+import { useSignin } from "@/hooks/auth";
 
 const signinSchema = z.object({
   identifier: z.string("Invalid username or password"),
@@ -46,7 +46,7 @@ export default function LoginPreview() {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center px-4">
-      <Card className="mx-autow-full max-w-[27rem]">
+      <Card className="mx-auto w-full max-w-[27rem]">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
