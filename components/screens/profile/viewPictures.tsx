@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-// import Image from "next/image";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -36,7 +35,6 @@ export default function ViewPictures({ user, me }: { user: User; me: boolean }) 
 
   return (
     <div className="relative">
-      {/* ✅ COVER IMAGE TRIGGER */}
       <div
         className={`h-48 cursor-pointer sm:h-64 ${
           user.coverImageUrl
@@ -64,7 +62,6 @@ export default function ViewPictures({ user, me }: { user: User; me: boolean }) 
         onOpenChange={setOpenCover}
       />
 
-      {/* ✅ PROFILE IMAGE TRIGGER */}
       <div className="absolute -bottom-16 left-4 sm:left-6">
         <div
           className="group cursor-pointer"

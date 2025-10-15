@@ -189,13 +189,15 @@ export function PictureDialog({
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button
-                disabled={isLoading}
-                type="button"
-                onClick={() => onSave()}
-              >
-                Save
-              </Button>
+              <DialogClose asChild>
+                <Button
+                  disabled={isLoading}
+                  type="button"
+                  onClick={() => onSave()}
+                >
+                  Save
+                </Button>
+              </DialogClose>
             </DialogFooter>
           )}
         </DialogContent>

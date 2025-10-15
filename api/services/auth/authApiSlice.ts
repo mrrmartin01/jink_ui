@@ -1,7 +1,7 @@
 import { User } from "@/types/user";
 import { apiSlice } from "../apiSlice";
 import { setAuth } from "@/api/features/auth/authSlice";
-import { RootState } from "@/api/store";
+import { createImageMutationHandler } from "@/utils/updateUserCache";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -63,7 +63,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    //crud user
     forgotPassword: builder.mutation({
       query: ({ email }) => ({
         url: "/auth/forgot-password",
@@ -84,16 +83,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      async onQueryStarted(data, { dispatch, queryFulfilled, getState }) {
-        const currentUser = (getState() as RootState).auth.user;
-
+      async onQueryStarted(data, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           authApiSlice.util.updateQueryData("getUser", undefined, (draft) => {
             Object.assign(draft, data);
           }),
         );
-        dispatch(setAuth({ ...currentUser, ...data }));
-
         try {
           const { data: response } = await queryFulfilled;
           dispatch(setAuth(response.user ?? response));
@@ -102,31 +97,39 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+
     postProfilePicture: builder.mutation({
       query: (formData) => ({
         url: "/users/profile-picture",
         method: "POST",
         body: formData,
       }),
+      onQueryStarted: createImageMutationHandler("profile", false),
     }),
+
     deleteProfilePicture: builder.mutation({
       query: () => ({
         url: "/users/profile-picture",
         method: "DELETE",
       }),
+      onQueryStarted: createImageMutationHandler("profile", true),
     }),
+
     postCoverPicture: builder.mutation({
       query: (formData) => ({
         url: "/users/cover-picture",
         method: "POST",
         body: formData,
       }),
+      onQueryStarted: createImageMutationHandler("cover", false),
     }),
+
     deleteCoverPicture: builder.mutation({
       query: () => ({
         url: "/users/cover-picture",
         method: "DELETE",
       }),
+      onQueryStarted: createImageMutationHandler("cover", true),
     }),
   }),
 });
@@ -139,11 +142,10 @@ export const {
   useGetUserQuery,
   useSignupMutation,
   useSignoutMutation,
-
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  
   useEditUserMutation,
-
   usePostProfilePictureMutation,
   useDeleteProfilePictureMutation,
   usePostCoverPictureMutation,
